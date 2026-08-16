@@ -13,7 +13,7 @@ import Dropdown from "../components/Dropdown";
 import styles from "../styles/ReportFoundStyles";
 
 export default function ReportFoundScreen({ navigation, route }) {
-    const { photoUri } = route.params;
+    const { photoUri } = route.params; 
     const [selectedLocation, setSelectedLocation] = useState("");
 
     const locations = [
@@ -28,6 +28,45 @@ export default function ReportFoundScreen({ navigation, route }) {
         "Low Library",
         "Mudd Building",
     ];
+
+    const handleSubmit = async () => {
+        if (!photoUri) {
+            alert("Please take a picture first!");
+            return;
+        }
+
+        //FormData is container to hold image and location that's going to be sent from frontend --> backend
+        const formData = new FormData(); 
+
+        formData.append( "image", { //"image" needs to match what Python endppint expect (parameter in function)
+            uri: photoUri,
+            name: "found-item.jpg",
+            type: "image/jpeg",
+        });
+
+        formData.append( "location", selectedLocation);
+
+        //fetch() is saying send a request to this address
+        try {
+
+            const response = await fetch( //where backend actually contacts Python server 
+                "https://richness-rundown-postbox.ngrok-free.dev/report-found", //address
+                { //package containing iamge and location
+                    method: "POST",
+                    body: formData,
+                }
+            ); //fetch() will return a Promise that we later resolve to a Reponse obj
+            
+
+            const data = await response.json(); //.json() is reading data and turning into usable programming object
+            console.log(data);
+            
+
+        } catch(error) {
+            console.error(error);
+            alert("Something went wrong.");
+        }
+    };
 
     return (
         <KeyboardAvoidingView
@@ -57,7 +96,7 @@ export default function ReportFoundScreen({ navigation, route }) {
 
                         <View style={styles.imageContainer}>
                             <Image
-                                source={{ uri: photoUri }}
+                                source={{ uri: photoUri }} //uri is like the iamge address
                                 style={styles.photo}
                             />
                         </View>
@@ -91,7 +130,7 @@ export default function ReportFoundScreen({ navigation, route }) {
                                         : "#115E59",
                                 },
                             ]}
-                            onPress={() => navigation.navigate("Home")}
+                            onPress={handleSubmit}
                         >
                             <Text style={styles.buttonText}>
                                 Submit
