@@ -48,7 +48,6 @@ export default function ReportFoundScreen({ navigation, route }) {
 
         //fetch() is saying send a request to this address
         try {
-
             const response = await fetch( //where backend actually contacts Python server 
                 "https://richness-rundown-postbox.ngrok-free.dev/report-found", //address
                 { //package containing iamge and location
@@ -60,6 +59,8 @@ export default function ReportFoundScreen({ navigation, route }) {
 
             const data = await response.json(); //.json() is reading data and turning into usable programming object
             console.log(data);
+
+            navigation.navigate("Home");
             
 
         } catch(error) {

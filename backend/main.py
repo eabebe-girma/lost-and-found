@@ -6,6 +6,7 @@ from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware #used to make sure frontend and backend are allowed ro talk to each other when running on browswer (when testing app on laptop)
 from pathlib import Path  #Python tool for working with files and folders
 import shutil #gives Python tools for copying files 
+import uuid; #Python's way of generating unique identifiers 
 
 app = FastAPI() #creating API application and storing that backend in varibale "app"
 app.add_middleware(
@@ -33,14 +34,15 @@ async def report_found( #function that deals with above request with 2 parameter
     image: UploadFile = File(...),  
     location: str = Form(...)
  ):  # same thing, ... means its required 
-    image_path = UPLOAD_DIR / image.filename # gives path to save image --> becomes: uploads/images/blahblah.jpg
+    file_name = f"{uuid.uuid4()}.jpg"
+    image_path = UPLOAD_DIR / file_name; # gives path to save image --> becomes: uploads/images/blahblah.jpg
 
     with image_path.open("wb") as buffer:
         shutil.copyfileobj(image.file, buffer)
 
     return { #info sent to backend
-        "message": "Found item saved",
-        "image_path": str(image_path),
-        "location": location
+        "message": "Item reported successfully!",
+        "location": location,
+        "image": file_name
     }
 
