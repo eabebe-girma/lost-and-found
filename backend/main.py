@@ -8,6 +8,8 @@ from pathlib import Path  #Python tool for working with files and folders
 import shutil #gives Python tools for copying files 
 import uuid; #Python's way of generating unique identifiers 
 
+from clip_model import get_image_embedding
+
 app = FastAPI() #creating API application and storing that backend in varibale "app"
 app.add_middleware(
     CORSMiddleware,
@@ -34,15 +36,19 @@ async def report_found( #function that deals with above request with 2 parameter
     image: UploadFile = File(...),  
     location: str = Form(...)
  ):  # same thing, ... means its required 
+
+    #1. Generate unique ID and name image
     file_name = f"{uuid.uuid4()}.jpg"
     image_path = UPLOAD_DIR / file_name; # gives path to save image --> becomes: uploads/images/blahblah.jpg
 
+    #2. Save image
     with image_path.open("wb") as buffer:
         shutil.copyfileobj(image.file, buffer)
 
-    return { #info sent to backend
+    #3. Send saved image to CLIP and get embedding
+    embedding = get_image_embedding(image_path)
+
+    return { #info sent to frontend
         "message": "Item reported successfully!",
-        "location": location,
-        "image": file_name
     }
 

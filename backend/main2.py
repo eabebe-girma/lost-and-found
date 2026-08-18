@@ -1,3 +1,6 @@
+from transformers import CLIPProcessor, CLIPModel
+# CLIPModel: actual CLIP neural network that turns image --> numbers 
+# CLIPProcessor: prepares image and text into a format that CLIP expects 
 from PIL import Image
 import torch 
 
