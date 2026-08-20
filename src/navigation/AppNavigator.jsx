@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"; //a
 import HomeScreen from "../screens/HomeScreen";
 import ReportFoundScreen from "../screens/ReportFoundScreen";
 import ReportLostScreen from "../screens/ReportLostScreen";
+import ItemDisplayScreen from "../screens/ItemDisplayScreen";
 
 const Stack = createNativeStackNavigator(); //creating stack of screens
 
@@ -28,6 +29,11 @@ export default function AppNavigator() { //will later to be used in App.js to op
                 <Stack.Screen 
                     name="ReportLost"
                     component={ReportLostScreen}
+                />
+
+                <Stack.Screen
+                    name="ItemDisplay"
+                    component={ItemDisplayScreen}
                 />
 
             </Stack.Navigator>

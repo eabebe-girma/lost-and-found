@@ -50,7 +50,7 @@ export default function ReportFoundScreen({ navigation, route }) {
         try {
             const response = await fetch( //where backend actually contacts Python server 
                 "https://richness-rundown-postbox.ngrok-free.dev/report-found", //address
-                { //package containing iamge and location
+                { //package containing image and location
                     method: "POST",
                     body: formData,
                 }

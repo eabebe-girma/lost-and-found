@@ -15,11 +15,37 @@ export default function ReportLostScreen( {navigation} ) {
     const currentQuestion = lostQuestions[currentQuestionIndex]; //contains location obj
     const currentAnswer = answers[currentQuestion.key];
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (currentQuestionIndex < lostQuestions.length - 1) { //if not on last question, go the next one
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         } else {
-            assemble_description()
+            
+            try {
+                const description = assemble_description();
+
+                const response = await fetch(
+                    "https://richness-rundown-postbox.ngrok-free.dev/report-lost", //where its going
+                    { //what we're sending
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ //packaging description into JSON
+                            description: description,
+                        }),
+                    }
+                );
+
+                const data = await response.json();
+                console.log(data);
+
+                navigation.navigate("ItemDisplay");
+
+            } catch(error) {
+                console.error(error);
+                alert("Something went wrong");
+            }
+
         }
     }
    

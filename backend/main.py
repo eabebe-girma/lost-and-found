@@ -56,3 +56,16 @@ async def report_found( #function that deals with above request with 2 parameter
         "message": "Item reported successfully!",
     }
 
+@app.post("/report-lost")
+async def report_lost(
+    text: str = Form(...),
+):
+    #1. Use CLIP to get text embedding
+    text_embedding = get_text_embedding(text)
+
+    #2. Compare text embedding with all image embeddings 
+    matches = find_matches(text_embedding)
+
+    return {
+        "matches": matches
+    }
