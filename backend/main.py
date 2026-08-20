@@ -8,7 +8,7 @@ from pathlib import Path  #Python tool for working with files and folders
 import shutil #gives Python tools for copying files 
 import uuid; #Python's way of generating unique identifiers 
 
-from clip_model import get_image_embedding, save_embedding 
+from clip_model import get_image_embedding, get_text_embedding, save_embedding, find_matches
 
 app = FastAPI() #creating API application and storing that backend in varibale "app"
 app.add_middleware(

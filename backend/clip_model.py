@@ -54,6 +54,32 @@ def calculate_similarity(image_embedding, text_embedding):
     return similarity.item() #converts tensor into a normal number
     #note: a highed value = more similar
 
+def find_matches(text_embedding):
+    with open("embeddings.json", "r") as file:
+        embeddings = json.load(file)
+
+    matches = []
+
+    for item_id, saved_embedding in embeddings.items(): #going through every saved image embedding in json file
+        image_embedding = torch.tensor(saved_embedding).unsqueeze(0)
+
+        similarity = calculate_similarity(image_embedding, text_embedding)
+        matches.append({
+            "item_id": item_id,
+            "similarity": similarity
+        })
+
+    matches.sort( #sorting from highest --> lowest similarity
+        key=lambda x: x["similarity"],
+        reverse=True
+    )
+
+    return matches  #returning a list of items ranked based on similarity
+
+    
+
+
+
 
 
 
@@ -63,16 +89,12 @@ def calculate_similarity(image_embedding, text_embedding):
 
 # Testing code in this file
 if __name__ == "__main__": 
-    embed1 = get_image_embedding("uploads/images/found-item.jpg")
-    embed2 = get_text_embedding("Lined spiral notebook with writing in pencil")
-    similarity = calculate_similarity(embed1, embed2)
+    text_embed = get_text_embedding("White eraser with blue and white paper wrapper")
 
-    print(similarity)
+    matches = find_matches(text_embed) 
 
-    print("Embedding shape:", embed1.shape)
+    print("Matches:")
+    for match in matches:
+        print(match)
 
-    save_embedding("test-item", embed1)
-    print("Embedding saved!")
-
-    print("text embedding:", embed2.shape)
 
