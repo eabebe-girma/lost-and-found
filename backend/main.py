@@ -3,6 +3,7 @@
     # main.py saves image --> gives it to CLIP --> save info
 
 from fastapi import FastAPI, UploadFile, File, Form
+from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware #used to make sure frontend and backend are allowed ro talk to each other when running on browswer (when testing app on laptop)
 from pathlib import Path  #Python tool for working with files and folders
 import shutil #gives Python tools for copying files 
@@ -56,10 +57,16 @@ async def report_found( #function that deals with above request with 2 parameter
         "message": "Item reported successfully!",
     }
 
+#Creating a Python model that tells FastAPI a list-item request should contain a field called description which is a string
+class LostItem(BaseModel): 
+    description: str
+
 @app.post("/report-lost")
 async def report_lost(
-    description: str,
+    item: LostItem
 ):
+    description = item.description
+    
     #1. Use CLIP to get text embedding
     text_embedding = get_text_embedding(description)
 
