@@ -18,6 +18,8 @@ export default function ReportLostScreen( {navigation} ) {
     const handleNext = () => {
         if (currentQuestionIndex < lostQuestions.length - 1) { //if not on last question, go the next one
             setCurrentQuestionIndex(currentQuestionIndex + 1);
+        } else {
+            assemble_description()
         }
     }
    
@@ -38,6 +40,14 @@ export default function ReportLostScreen( {navigation} ) {
             [currentQuestion.key]: value,
         });
     };
+
+    const assemble_description = () => {
+        const item = answers["item"]
+        const description = answers["description"]
+
+        const text = `Lost ${item} that is/has ${description}`;
+        return text;
+    }
 
     return (
         <View style={styles.container}>
