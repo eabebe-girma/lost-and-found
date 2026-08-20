@@ -50,7 +50,7 @@ async def report_found( #function that deals with above request with 2 parameter
     embedding = get_image_embedding(image_path)
 
     #4. Save that embedding to JSON file 
-    save_embedding(item_id, embedding)
+    save_embedding(item_id, file_name, location, embedding)
 
     return { #info sent to frontend
         "message": "Item reported successfully!",
@@ -58,10 +58,10 @@ async def report_found( #function that deals with above request with 2 parameter
 
 @app.post("/report-lost")
 async def report_lost(
-    text: str = Form(...),
+    description: str,
 ):
     #1. Use CLIP to get text embedding
-    text_embedding = get_text_embedding(text)
+    text_embedding = get_text_embedding(description)
 
     #2. Compare text embedding with all image embeddings 
     matches = find_matches(text_embedding)

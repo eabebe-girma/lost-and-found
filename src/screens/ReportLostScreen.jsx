@@ -38,6 +38,7 @@ export default function ReportLostScreen( {navigation} ) {
 
                 const data = await response.json();
                 console.log(data);
+                console.log(data);
 
                 navigation.navigate("ItemDisplay");
 

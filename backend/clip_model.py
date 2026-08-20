@@ -39,12 +39,15 @@ def get_text_embedding(text):
 
     return norm_embedding #tensor containing text embedding
 
-def save_embedding(item_id, embedding): #saving embedding under given item_id
+def save_embedding(item_id, image_filename, location, embedding): #saving embedding under given item_id
     with open("embeddings.json", "r") as file:
         embeddings = json.load(file)
 
-    #Note: json doesnt understand tensors, so we're have to convert to Python list
-    embeddings[item_id] = embedding.squeeze().tolist() 
+    embeddings[item_id] = {  #dictionary of dicts w/ key being item_id
+        "image": image_filename,
+        "location": location,
+        "embedding": embedding.squeeze().tolist()  #Note: json doesnt understand tensors, so we're have to convert to Python list
+    }
 
     with open("embeddings.json", "w") as file:
         json.dump(embeddings, file, indent=4)
@@ -58,30 +61,30 @@ def find_matches(text_embedding):
     with open("embeddings.json", "r") as file:
         embeddings = json.load(file)
 
-    matches = []
+    matches = [] #list of dictionaries, where e/ dict is a potential match
 
-    for item_id, saved_embedding in embeddings.items(): #going through every saved image embedding in json file
-        image_embedding = torch.tensor(saved_embedding).unsqueeze(0)
+    for item_id, item_data in embeddings.items():
+        saved_embedding = item_data["embedding"]
+
+        image_embedding = torch.tensor(saved_embedding).unsqueeze(0) #preparing embedding so model can process it
 
         similarity = calculate_similarity(image_embedding, text_embedding)
+
         matches.append({
             "item_id": item_id,
+            "image": item_data["image"],
+            "location": item_data["location"],
             "similarity": similarity
         })
 
-    matches.sort( #sorting from highest --> lowest similarity
-        key=lambda x: x["similarity"],
-        reverse=True
-    )
+        matches.sort( #sorting from highest --> lowest similarity
+            key=lambda x: x["similarity"],
+            reverse=True
+        )
 
-    return matches  #returning a list of items ranked based on similarity
+        return matches #returning list of dictionaries
 
     
-
-
-
-
-
 
 
 
