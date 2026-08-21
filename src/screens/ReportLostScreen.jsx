@@ -36,11 +36,9 @@ export default function ReportLostScreen( {navigation} ) {
                     }
                 );
 
-                const data = await response.json();
-                console.log(data);
-                console.log(data);
+                const data = await response.json(); //contains matches[]
 
-                navigation.navigate("ItemDisplay");
+                navigation.navigate("ItemDisplay", {matches:data.matches}); //passing matches[] to the next screen
 
             } catch(error) {
                 console.error(error);
