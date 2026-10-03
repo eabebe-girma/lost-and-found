@@ -97,7 +97,7 @@ export default function ReportFoundScreen({ navigation, route }) {
 
                         <View style={styles.imageContainer}>
                             <Image
-                                source={{ uri: photoUri }} //uri is like the iamge address
+                                source={{ uri: photoUri }} //uri is like the image address
                                 style={styles.photo}
                             />
                         </View>
