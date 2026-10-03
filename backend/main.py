@@ -5,6 +5,7 @@
 from fastapi import FastAPI, UploadFile, File, Form
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware #used to make sure frontend and backend are allowed ro talk to each other when running on browswer (when testing app on laptop)
+from fastapi.staticfiles import StaticFiles
 from pathlib import Path  #Python tool for working with files and folders
 import shutil #gives Python tools for copying files 
 import uuid; #Python's way of generating unique identifiers 
@@ -19,6 +20,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads") #tells FastAPI that for "/uploads" requests look inside uplodas folder
 
 
 UPLOAD_DIR = Path("uploads/images")
@@ -66,7 +68,7 @@ async def report_lost(
     item: LostItem
 ):
     description = item.description
-    
+
     #1. Use CLIP to get text embedding
     text_embedding = get_text_embedding(description)
 
